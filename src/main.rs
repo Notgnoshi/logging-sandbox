@@ -1,11 +1,20 @@
 mod submod;
 
+use clap::Parser;
 use tracing_subscriber::EnvFilter;
 
+#[derive(Parser)]
+#[clap(about, version)]
+struct CliArgs {
+    #[clap(short, long, default_value_t = tracing::Level::DEBUG)]
+    log_level: tracing::Level,
+}
+
 fn main() {
+    let args = CliArgs::parse();
+
     let filter = EnvFilter::builder()
-        // placeholder for CLI argument
-        .with_default_directive(tracing::Level::DEBUG.into())
+        .with_default_directive(args.log_level.into())
         .from_env_lossy();
 
     tracing_subscriber::fmt()
