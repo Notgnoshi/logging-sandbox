@@ -5,15 +5,15 @@ with the following requirements:
 
 * [X] Rust 1.68.2, Raspberry Pi 2 equivalent hardware with a _crummy_ disk (writes can block for
       ~20 seconds)
-* [ ] Log to disk
-    * [ ] Non-blocking I/O
-    * [ ] Buffered I/O (flush on log record at most)
-    * [ ] Rotate log file on application startup
-    * [ ] (optional) Rotate log file when it reaches a maximum size
+* [O] Log to disk
+    * [X] Non-blocking I/O
+    * [X] Buffered I/O (flush on log record at most)
+    * [X] Rotate log file on application startup
+    * [X] (optional) Rotate log file when it reaches a maximum size
     * [ ] (optional) Split application logs into several files defined at build time
 * [o] Console logs
-    * [ ] Disabled when stdout is not a TTY
     * [X] Colored (surprisingly high value)
+    * [ ] (optional) Disabled when stdout is not a TTY
 * [o] Filtering
     * [X] Can set per-module filters and level override at application startup (through `RUST_LOG`
           environment variable)

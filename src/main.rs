@@ -1,4 +1,7 @@
 mod submod;
+
+use std::path::PathBuf;
+
 use clap::Parser;
 use eyre::WrapErr;
 use tracing_subscriber::EnvFilter;
@@ -38,10 +41,29 @@ fn main() -> eyre::Result<()> {
         .parse(&filters)
         .wrap_err(format!("Failed to parse {filters:?}"))?;
 
+    let log_file = PathBuf::from("./log/example.log");
+    let should_rotate_on_startup = log_file.exists();
+    let max_files = 4;
+    let mut rolling_file = file_rotate::FileRotate::new(
+        log_file,
+        file_rotate::suffix::AppendCount::new(max_files),
+        file_rotate::ContentLimit::None,
+        file_rotate::compression::Compression::None,
+        None,
+    );
+    // Rotate the file now, on startup, before we start logging to it.
+    if should_rotate_on_startup {
+        rolling_file.rotate()?;
+    }
+    // TODO: There's a builder to set the thread name and queue size
+    let (async_rolling_file, _guard) = tracing_appender::non_blocking(rolling_file);
+    let writer = tracing_subscriber::fmt::writer::Tee::new(async_rolling_file, std::io::stdout);
+
     tracing_subscriber::fmt()
         .with_env_filter(env_filter)
         .with_env_filter(cli_filter)
-        .with_ansi(true)
+        .with_ansi(true) // This logs to the file in color
+        .with_writer(writer)
         .init();
 
     tracing::info!("CLI arguments: {args:?}");
