@@ -8,6 +8,8 @@ rust-version = "1.68.2"
 
 [dependencies]
 clap = { version = "<4.4", features = ["derive"] }
+color-eyre = "0.6.3"
+eyre = "0.6.12"
 tracing = "0.1.40"
 tracing-appender = "0.2.3"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }

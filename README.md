@@ -14,10 +14,10 @@ with the following requirements:
 * [o] Console logs
     * [ ] Disabled when stdout is not a TTY
     * [X] Colored (surprisingly high value)
-* [.] Filtering
+* [o] Filtering
     * [X] Can set per-module filters and level override at application startup (through `RUST_LOG`
           environment variable)
-    * [ ] Filters and global log level can be set from CLI arguments and a TOML config file
+    * [X] Filters and global log level can be set from CLI arguments and a TOML config file
     * [ ] (optional, but really nice) Lazy logging
     * [ ] (optional, but REALLY nice) Change filters while application is running
 * [X] Formatting
