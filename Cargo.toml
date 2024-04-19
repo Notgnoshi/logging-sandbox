@@ -1,0 +1,17 @@
+[package]
+name = "logging-sandbox"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.68.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "<4.4", features = ["derive"] }
+color-eyre = "0.6.3"
+eyre = "0.6.12"
+file-rotate = "0.7.5"
+log = "0.4.21"
+tracing = "0.1.40"
+tracing-appender = "0.2.3"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
