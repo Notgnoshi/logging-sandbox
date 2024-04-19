@@ -26,20 +26,12 @@ fn main() -> eyre::Result<()> {
     color_eyre::install()?;
 
     let args = CliArgs::parse();
-    let filters = args.log_filters.join(",");
-
-    let env_filter = EnvFilter::builder()
-        .with_default_directive(args.log_level.into())
-        .from_env()
-        .wrap_err(format!(
-            "Failed to parse {:?}",
-            std::env::var("RUST_LOG").unwrap_or_default()
-        ))?;
+    let filter_expression = args.log_filters.join(",");
 
     let cli_filter = EnvFilter::builder()
         .with_default_directive(args.log_level.into())
-        .parse(&filters)
-        .wrap_err(format!("Failed to parse {filters:?}"))?;
+        .parse(&filter_expression)
+        .wrap_err(format!("Failed to parse {filter_expression:?}"))?;
 
     let log_file = PathBuf::from("./log/example.log");
     let should_rotate_on_startup = log_file.exists();
@@ -59,12 +51,15 @@ fn main() -> eyre::Result<()> {
     let (async_rolling_file, _guard) = tracing_appender::non_blocking(rolling_file);
     let writer = tracing_subscriber::fmt::writer::Tee::new(async_rolling_file, std::io::stdout);
 
-    tracing_subscriber::fmt()
-        .with_env_filter(env_filter)
+    let builder = tracing_subscriber::fmt()
         .with_env_filter(cli_filter)
-        .with_ansi(true) // This logs to the file in color
         .with_writer(writer)
-        .init();
+        .with_filter_reloading()
+        .with_ansi(true);
+
+    let reload_handle = builder.reload_handle();
+
+    builder.init();
 
     tracing::info!("CLI arguments: {args:?}");
 
@@ -75,5 +70,12 @@ fn main() -> eyre::Result<()> {
     tracing::error!("error");
 
     submod::function();
+
+    tracing::info!("Reloading logging filter");
+    let new_filter = EnvFilter::builder().parse_lossy("logging_sandbox::submod=ERROR");
+    reload_handle.reload(new_filter)?;
+
+    submod::function();
+
     Ok(())
 }
