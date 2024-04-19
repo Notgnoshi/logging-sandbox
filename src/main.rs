@@ -69,6 +69,8 @@ fn main() -> eyre::Result<()> {
     tracing::warn!("warn");
     tracing::error!("error");
 
+    log::info!("An info stdlog log");
+
     submod::function();
 
     tracing::info!("Reloading logging filter");

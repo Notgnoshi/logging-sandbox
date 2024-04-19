@@ -24,6 +24,7 @@ with the following requirements:
     * [X] UTC ISO-8601 with millisecond precision
     * [X] Level, module, message
     * [X] (optional) thread ID / thread name
+* [X] `log` interopt
 * [ ] (optional) stderr capture
 * [ ] (optional) panic capture
 * [ ] (optional) Capture Perfetto traces (How would this work for tight loop performance debugging?)

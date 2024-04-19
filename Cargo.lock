@@ -383,6 +383,7 @@ dependencies = [
  "color-eyre",
  "eyre",
  "file-rotate",
+ "log",
  "tracing",
  "tracing-appender",
  "tracing-subscriber",
